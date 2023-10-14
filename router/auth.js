@@ -1,6 +1,6 @@
 const express = require("express");
 const User = require("../schema/User");
-const { AddUser, GetUser } = require("./consts");
+const { AddUser, GetUser, GetUsers } = require("./consts");
 
 const authRouter = express.Router();
 
@@ -9,9 +9,9 @@ authRouter.post(AddUser, async (req, res) => {
     // ? Client Error
     const { name, email, username, phone } = req.body;
 
-    const exisiting = await User.findOne({ email: email });
+    const exsisting = await User.findOne({ email: email });
 
-    if (exisiting) {
+    if (exsisting) {
       return res
         .status(400)
         .json({ message: "User already exists with the same email" });
@@ -32,6 +32,8 @@ authRouter.post(AddUser, async (req, res) => {
   }
 });
 
+
+
 authRouter.get(`${GetUser}/:email`, async (req, res) => {
   try {
     const { email } = req.params;
@@ -46,5 +48,30 @@ authRouter.get(`${GetUser}/:email`, async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
+
+
+authRouter.get('/GetUsers/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
+
+
+
 
 module.exports = authRouter;
