@@ -1,6 +1,6 @@
 const express = require("express");
 const User = require("../schema/User");
-const { AddUser, GetUser, GetUsers } = require("./consts");
+const { AddUser, GetUser, GetUsers, EditUser, DeleteUser } = require("./consts");
 
 const authRouter = express.Router();
 
@@ -81,6 +81,44 @@ authRouter.get(GetUsers, async (req, res) => {
 });
 
 
+authRouter.put(`${EditUser}/:id`, async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const updatedUserData = req.body;
+
+    const existingUser = await User.findById(userId);
+
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    existingUser.set(updatedUserData);
+    const updatedUser = await existingUser.save();
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+authRouter.delete(`${DeleteUser}/:id`, async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const existingUser = await User.findById(userId);
+
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await User.deleteOne({ _id: userId });
+
+    res.status(200).json("User deleted successfully");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 
 
