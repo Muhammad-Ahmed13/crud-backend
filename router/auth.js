@@ -51,22 +51,34 @@ authRouter.get(`${GetUser}/:email`, async (req, res) => {
 
 
 
-authRouter.get('/GetUsers/:email', async (req, res) => {
+// authRouter.get(`${GetUsers}/:email`, async (req, res) => {
+//   try {
+//     const { email } = req.params;
+
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     res.json(user);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+authRouter.get(GetUsers, async (req, res) => {
   try {
-    const { email } = req.params;
+    const users = await User.find();
 
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (users.length === 0) {
+      return res.status(404).json({ message: "No users found" });
     }
 
-    res.json(user);
+    res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 
 
