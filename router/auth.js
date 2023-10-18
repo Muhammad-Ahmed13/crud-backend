@@ -82,23 +82,34 @@ authRouter.get(GetUsers, async (req, res) => {
 
 
 authRouter.put(`${EditUser}/:id`, async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const updatedUserData = req.body;
+  let user = req.body;
 
-    const existingUser = await User.findById(userId);
+  const editUser = new User(user);
 
-    if (!existingUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    existingUser.set(updatedUserData);
-    const updatedUser = await existingUser.save();
-
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  console.log(editUser,req.params,'messgevtontest');
+  try{
+      await User.updateOne({_id: req.params.id}, editUser);
+      res.status(201).json(editUser);
+  } catch (error){
+      res.status(409).json({ message: error.message});     
   }
+  // try {
+  //   const userId = req.params.id;
+  //   const updatedUserData = req.body;
+
+  //   const existingUser = await User.findById(userId);
+
+  //   if (!existingUser) {
+  //     return res.status(404).json({ message: "User not found" });
+  //   }
+
+  //   existingUser.set(updatedUserData);
+  //   const updatedUser = await existingUser.save();
+
+  //   res.status(200).json(updatedUser);
+  // } catch (error) {
+  //   res.status(500).json({ error: error.message });
+  // }
 });
 
 
