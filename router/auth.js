@@ -105,7 +105,7 @@ authRouter.get(GetUsers, async (req, res) => {
 //   }
 // });
 
-authRouter.post(`${EditUser}/:id`, async (req, res) => {
+authRouter.post('/edit_user/:id', async (req, res) => {
   try {
     const { _id, ...updates } = req.body;
     const newUser = await User.findById(_id);
