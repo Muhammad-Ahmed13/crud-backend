@@ -34,15 +34,32 @@ authRouter.post(AddUser, async (req, res) => {
 
 
 
-authRouter.get(`${GetUser}/:email`, async (req, res) => {
-  try {
-    const { email } = req.params;
+// authRouter.get(`${GetUser}/:email`, async (req, res) => {
+//   try {
+//     const { email } = req.params;
 
-    const user = await User.findOne({ email: email });
+//     const user = await User.findOne({ email: email });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+//     res.json(user);
+//   } catch (e) {
+//     res.status(500).json({ error: e.message });
+//   }
+// });
+
+
+authRouter.get(`${GetUser}/:id`, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id); // Use User.findById to query by ID
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
     res.json(user);
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -50,22 +67,6 @@ authRouter.get(`${GetUser}/:email`, async (req, res) => {
 });
 
 
-
-// authRouter.get(`${GetUsers}/:email`, async (req, res) => {
-//   try {
-//     const { email } = req.params;
-
-//     const user = await User.findOne({ email });
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     res.json(user);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
 authRouter.get(GetUsers, async (req, res) => {
   try {
     const users = await User.find();
